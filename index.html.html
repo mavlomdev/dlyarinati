@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up! С Днем Рождения тебя Рината ✨</title>
+    <!-- Подключаем Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Конфигурация кастомных цветов Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#09090b',
+                        cardBg: '#121216',
+                        accent: '#8b5cf6',
+                        accentNeon: '#10b981',
+                        cyanNeon: '#06b6d4',
+                        pinkNeon: '#f43f5e'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Иконки -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #09090b;
+            color: #f4f4f5;
+            overflow-x: hidden;
+        }
+        .heading-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Неоновые фоновые пятна */
+        .neon-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.05) 60%, transparent 100%);
+            border-radius: 50%;
+            z-index: 0;
+            filter: blur(80px);
+            animation: floatGlow 10s infinite alternate ease-in-out;
+        }
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 60px) scale(1.2); }
+        }
+        /* Звезды/искры */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .particle {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        /* Экраны с плавной сменой */
+        .screen {
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+        .screen-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.97) translateY(15px);
+            position: absolute;
+            width: 100%;
+            height: 0;
+            overflow: hidden;
+        }
+        .screen-active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1) translateY(0);
+            position: relative;
+            height: auto;
+        }
+        /* Анимация конверта */
+        .envelope-box {
+            cursor: pointer;
+            perspective: 1000px;
+        }
+        .envelope {
+            position: relative;
+            transition: transform 0.5s ease;
+            transform-style: preserve-3d;
+        }
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top;
+            transition: transform 0.5s ease 0.1s;
+            z-index: 20;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #09090b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
+
+    <!-- Фоновые элементы освещения -->
+    <div class="neon-glow top-12 left-12 pointer-events-none"></div>
+    <div class="neon-glow bottom-12 right-12 pointer-events-none" style="animation-delay: -5s;"></div>
+    
+    <!-- Контейнер для частиц/звезд -->
+    <div id="particles-container" class="absolute inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+    <!-- Верхняя панель -->
+    <header class="relative z-10 w-full max-w-4xl mx-auto px-6 py-6 flex justify-between items-center">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchScreen('screen-1')">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                <i class="fa-solid fa-bolt text-white text-sm"></i>
+            </div>
+            <span class="heading-font font-bold text-sm tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400">LEVEL UP VIBE</span>
+        </div>
+        <button onclick="triggerConfetti()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium transition-all flex items-center space-x-2 backdrop-blur-md">
+            <i class="fa-solid fa-wand-magic-sparkles text-cyan-400"></i>
+            <span>Момент</span>
+        </button>
+    </header>
+
+    <!-- ЭКРАН 1: Главная страница -->
+    <div id="screen-1" class="screen screen-active z-10 w-full max-w-3xl mx-auto px-6 py-12 flex flex-col items-center text-center my-auto">
+        
+        <!-- Бейдж: знакомство месяц -->
+        <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold mb-6">
+            <i class="fa-solid fa-calendar-day text-purple-400"></i>
+            <span>Знакомы всего месяц, но уже успели хорошо подружиться</span>
+        </div>
+
+        <!-- Заголовок -->
+        <h1 class="heading-font text-4xl sm:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+            Level Up! <br>
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-cyan-400 to-emerald-400">С Днем Рождения Рината!</span>
+        </h1>
+
+        <p class="text-zinc-400 text-sm sm:text-base max-w-md mb-10 font-light leading-relaxed">
+            Хотя начали общаться недавно, но успели понять, что ты человек абсолютно ахуенный. воли персональный портал с поздравлением! 🚀
+        </p>
+
+        <!-- Кнопка перехода -->
+        <button onclick="switchScreen('screen-2')" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold shadow-xl shadow-purple-600/25 transition-all transform hover:-translate-y-0.5 flex items-center space-x-3 text-sm sm:text-base">
+            <span>Открыть поздравление</span>
+            <i class="fa-solid fa-arrow-right animate-pulse"></i>
+        </button>
+    </div>
+
+    <!-- ЭКРАН 2: Основное поздравление, карточки, конверт, мини-игра -->
+    <div id="screen-2" class="screen screen-hidden z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 py-6 flex flex-col items-center">
+
+        <!-- Кнопка назад -->
+        <div class="w-full flex justify-start mb-6">
+            <button onclick="switchScreen('screen-1')" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium transition-all flex items-center space-x-2 text-zinc-300 hover:text-white backdrop-blur-md">
+                <i class="fa-solid fa-arrow-left text-purple-400"></i>
+                <span>На главную</span>
+            </button>
+        </div>
+
+        <!-- Шапка экрана -->
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs font-semibold mb-3">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>С праздником!</span>
+            </div>
+            <h2 class="heading-font text-2xl sm:text-4xl font-bold mb-2">Норм пообщались за этот месяц 😎</h2>
+            <p class="text-zinc-400 text-xs sm:text-sm max-w-md mx-auto">Коротко о том, почему этот день надо отметить на высшем уровне</p>
+        </div>
+
+        <!-- Карточки: Топ причин / Вайб -->
+        <section class="w-full mb-12">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- Карточка 1 -->
+                <div onclick="tapCard(this)" class="bg-[#121216] border border-white/5 hover:border-purple-500/30 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+                    <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-3 text-sm group-hover:bg-purple-500/20 transition-colors">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="heading-font font-semibold text-sm mb-1 text-zinc-200">Быстрый старт</h3>
+                    <p class="text-xs text-zinc-400">Месяц пролетел незаметно, а ощущение, будто знакомы сто лет.</p>
+                </div>
+
+                <!-- Карточка 2 -->
+                <div onclick="tapCard(this)" class="bg-[#121216] border border-white/5 hover:border-cyan-500/30 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+                    <div class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3 text-sm group-hover:bg-cyan-500/20 transition-colors">
+                        <i class="fa-solid fa-mug-hot"></i>
+                    </div>
+                    <h3 class="heading-font font-semibold text-sm mb-1 text-zinc-200">Отличный вайб</h3>
+                    <p class="text-xs text-zinc-400">Всегда на позитиве, без душноты и лишних заморочек. Респект.</p>
+                </div>
+
+                <!-- Карточка 3 -->
+                <div onclick="tapCard(this)" class="bg-[#121216] border border-white/5 hover:border-emerald-500/30 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3 text-sm group-hover:bg-emerald-500/20 transition-colors">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 class="heading-font font-semibold text-sm mb-1 text-zinc-200">Level Up</h3>
+                    <p class="text-xs text-zinc-400">Пусть новый год жизни приносит только крутые события и легкие победы.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Интерактивный конверт с текстом -->
+        <section class="w-full mb-12">
+            <div class="bg-[#121216] border border-white/5 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-xl">
+                <div class="text-center mb-5">
+                    <h3 class="heading-font text-lg font-bold mb-1">Секретное послание</h3>
+                    <p class="text-zinc-400 text-xs">Тапни на конверт, чтобы прочитать пожелание без лишней сопливости</p>
+                </div>
+
+                <div class="flex justify-center">
+                    <div class="envelope-box w-full max-w-sm" onclick="openEnvelope()">
+                        <div id="envelope" class="envelope bg-gradient-to-b from-zinc-900 to-zinc-950 rounded-2xl border border-purple-500/20 p-6 shadow-lg min-h-[180px] flex flex-col justify-between relative transition-all">
+                            <div class="envelope-flap"></div>
+                            
+                            <div id="envelope-front" class="flex flex-col items-center justify-center py-4 transition-opacity duration-300">
+                                <div class="w-12 h-12 rounded-full bg-purple-500/10 border border-purple-500/30 flex items-center justify-center mb-2 text-purple-400 text-base">
+                                    <i class="fa-solid fa-envelope-open-text"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-purple-300 tracking-wider">ОТКРЫТЬ КОНВЕРТ</span>
+                            </div>
+
+                            <div id="envelope-content" class="hidden opacity-0 transition-opacity duration-500 text-left">
+                                <h4 class="heading-font text-sm font-bold text-purple-300 mb-2">С днюхой! 👊</h4>
+                                <p class="text-zinc-300 text-xs leading-relaxed mb-3">
+                                    Короче говоря, с праздником тебя! Хоть знакомы мы всего месяц, общаться с тобой реально круто и легко. Желаю тебе всегда быть на высоте, чтобы всё задуманное получалось само собой, окружения верных людей и чтобы настроение всегда было на максимум!
+                                </p>
+                                <p class="text-right text-purple-400 text-xs font-medium">— от меня 🦾</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Мини-игра: Кликни бонус -->
+        <section class="w-full mb-8">
+            <div class="bg-gradient-to-r from-purple-950/20 to-cyan-950/20 border border-purple-500/20 rounded-3xl p-6 sm:p-8 text-center relative overflow-hidden shadow-xl">
+                <h3 class="heading-font text-lg font-bold mb-1">Праздничный бонус 🎮</h3>
+                <p class="text-zinc-400 text-xs mb-4">Нажми кнопку и собери 8 зарядов энергии для крутого дня</p>
+
+                <div class="flex items-center justify-center space-x-6 mb-4">
+                    <div class="bg-black/30 px-4 py-2 rounded-xl border border-white/5">
+                        <span class="text-[10px] text-zinc-400 block">Зарядов собрано</span>
+                        <span id="score-val" class="text-xl font-bold text-cyan-400">0 / 8</span>
+                    </div>
+                    <button onclick="startMiniGame()" id="game-btn" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-all text-xs">
+                        Начать сбор
+                    </button>
+                </div>
+
+                <div id="game-box" class="relative w-full h-44 bg-black/40 rounded-2xl border border-white/5 overflow-hidden cursor-crosshair hidden flex items-center justify-center">
+                    <span id="game-hint" class="text-xs text-zinc-500 pointer-events-none animate-pulse">Кликай по появляющимся значкам!</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Футер -->
+    <footer class="relative z-10 w-full max-w-4xl mx-auto px-6 py-6 text-center border-t border-white/5 text-xs text-zinc-500 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p>Сделано по-дружески и с уважением ✨</p>
+        <p class="text-purple-400 font-medium">С днем рождения!</p>
+    </footer>
+
+    <!-- Кастомное модальное окно -->
+    <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-[#121216] border border-purple-500/30 rounded-3xl p-6 max-w-xs w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300 text-center" id="modal-box">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mx-auto mb-3 text-purple-400 text-xl">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h3 id="modal-heading" class="heading-font text-base font-bold mb-1 text-purple-300">Успех!</h3>
+            <p id="modal-desc" class="text-zinc-300 text-xs mb-5">Все бонусы собраны. Отличного тебе настроения и крутого дня!</p>
+            <button onclick="closeModal()" class="w-full py-2.5 rounded-xl bg-purple-600 text-white text-xs font-semibold hover:bg-purple-500 transition-all">
+                Погнали дальше ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Библиотека конфетти -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        // Генерация фоновых частиц
+        const particlesContainer = document.getElementById('particles-container');
+        for (let i = 0; i < 40; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const size = Math.random() * 2.5 + 1;
+            p.style.width = `${size}px`;
+            p.style.height = `${size}px`;
+            p.style.top = `${Math.random() * 100}%`;
+            p.style.left = `${Math.random() * 100}%`;
+            p.style.animationDelay = `${Math.random() * 3}s`;
+            p.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            particlesContainer.appendChild(p);
+        }
+
+        // Переключение экранов
+        function switchScreen(screenId) {
+            const s1 = document.getElementById('screen-1');
+            const s2 = document.getElementById('screen-2');
+
+            if (screenId === 'screen-2') {
+                s1.classList.remove('screen-active');
+                s1.classList.add('screen-hidden');
+                s2.classList.remove('screen-hidden');
+                s2.classList.add('screen-active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                triggerConfetti();
+            } else {
+                s2.classList.remove('screen-active');
+                s2.classList.add('screen-hidden');
+                s1.classList.remove('screen-hidden');
+                s1.classList.add('screen-active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Конфетти
+        function triggerConfetti() {
+            confetti({
+                particleCount: 80,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#8b5cf6', '#06b6d4', '#10b981', '#ffffff']
+            });
+        }
+
+        // Открытие конверта
+        let envelopeOpened = false;
+        function openEnvelope() {
+            const env = document.getElementById('envelope');
+            const front = document.getElementById('envelope-front');
+            const content = document.getElementById('envelope-content');
+
+            if (!envelopeOpened) {
+                env.classList.add('open');
+                front.style.opacity = '0';
+                setTimeout(() => {
+                    front.classList.add('hidden');
+                    content.classList.remove('hidden');
+                    setTimeout(() => { content.style.opacity = '1'; }, 50);
+                }, 250);
+                envelopeOpened = true;
+                triggerConfetti();
+            }
+        }
+
+        // Тап по карточке
+        function tapCard(el) {
+            el.style.transform = 'scale(0.97)';
+            setTimeout(() => { el.style.transform = 'scale(1)'; }, 150);
+            triggerConfetti();
+        }
+
+        // Мини-игра
+        let gameScore = 0;
+        let gameTimer = null;
+        let gameActive = false;
+
+        function startMiniGame() {
+            const box = document.getElementById('game-box');
+            const btn = document.getElementById('game-btn');
+            const hint = document.getElementById('game-hint');
+            const scoreVal = document.getElementById('score-val');
+
+            if (gameActive) return;
+
+            gameActive = true;
+            gameScore = 0;
+            scoreVal.textContent = `${gameScore} / 8`;
+            box.classList.remove('hidden');
+            hint.style.display = 'block';
+            btn.textContent = 'Лови...';
+            btn.classList.add('opacity-50', 'pointer-events-none');
+
+            gameTimer = setInterval(() => {
+                if (!gameActive) return;
+
+                const item = document.createElement('div');
+                item.innerHTML = '<i class="fa-solid fa-star text-cyan-400 text-xl hover:scale-125 transition-transform"></i>';
+                item.className = 'absolute cursor-pointer select-none transition-transform duration-100';
+                
+                const maxX = box.clientWidth - 35;
+                const maxY = box.clientHeight - 35;
+                item.style.left = `${Math.random() * maxX}px`;
+                item.style.top = `${Math.random() * maxY}px`;
+
+                item.onclick = (e) => {
+                    if (!gameActive) return;
+                    gameScore++;
+                    scoreVal.textContent = `${gameScore} / 8`;
+                    item.remove();
+
+                    confetti({
+                        particleCount: 10,
+                        spread: 30,
+                        origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight }
+                    });
+
+                    if (gameScore >= 8) {
+                        endMiniGame(true);
+                    }
+                };
+
+                box.appendChild(item);
+                setTimeout(() => { if (item.parentElement) item.remove(); }, 1400);
+
+            }, 650);
+        }
+
+        function endMiniGame(won) {
+            gameActive = false;
+            clearInterval(gameTimer);
+
+            const box = document.getElementById('game-box');
+            const btn = document.getElementById('game-btn');
+            box.innerHTML = '<span class="text-xs font-semibold text-cyan-300">Заряд на максимум! 🔥</span>';
+            
+            btn.textContent = 'Сыграть еще';
+            btn.classList.remove('opacity-50', 'pointer-events-none');
+
+            if (won) {
+                showModal('Отлично!', 'Все бонусы собраны! Пусть этот день пройдет максимально круто.');
+                triggerConfetti();
+            }
+        }
+
+        function showModal(title, desc) {
+            document.getElementById('modal-heading').textContent = title;
+            document.getElementById('modal-desc').textContent = desc;
+            const m = document.getElementById('modal');
+            const b = document.getElementById('modal-box');
+            m.classList.remove('opacity-0', 'pointer-events-none');
+            b.classList.remove('scale-95');
+            b.classList.add('scale-100');
+        }
+
+        function closeModal() {
+            const m = document.getElementById('modal');
+            const b = document.getElementById('modal-box');
+            b.classList.remove('scale-100');
+            b.classList.add('scale-95');
+            m.classList.add('opacity-0', 'pointer-events-none');
+
+            const box = document.getElementById('game-box');
+            box.classList.add('hidden');
+            box.innerHTML = '<span id="game-hint" class="text-xs text-zinc-500 pointer-events-none animate-pulse">Кликай по появляющимся значкам!</span>';
+        }
+    </script>
+</body>
+</html>
